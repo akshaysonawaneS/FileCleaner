@@ -2,9 +2,13 @@ import time
 from os.path import expanduser
 from watchdog.observers import Observer
 from main import Cleaner
+from sys import platform
 
 if __name__ == "__main__":
-    check_path = expanduser("~") + "/Downloads"
+    if platform == "linux" or platform == "macOS":
+        check_path = expanduser("~") + "/Downloads/"
+    elif platform == "windows":
+        check_path = expanduser("~") + r"\Downloads\\"
 
     event_handler = Cleaner(check_path)
     observer = Observer()
@@ -13,7 +17,7 @@ if __name__ == "__main__":
 
     try:
         while True:
-            time.sleep(10)
+            time.sleep(5)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()
