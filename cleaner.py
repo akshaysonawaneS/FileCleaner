@@ -8,7 +8,7 @@ if __name__ == "__main__":
     if platform == "linux" or platform == "macOS":
         check_path = expanduser("~") + "/Downloads/"
     elif platform == "windows":
-        check_path = expanduser("~") + r"\Downloads\\"
+        check_path = expanduser("~") + r"\\Downloads\\"
 
     event_handler = Cleaner(check_path)
     observer = Observer()

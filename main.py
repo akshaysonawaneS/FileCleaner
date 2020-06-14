@@ -24,19 +24,23 @@ def rename_file(filename, file_extension, check_path, path):
 
 def move_file(check_path, file):
     """
-    Moving file downloaded to specific folder
+    Moving file downloaded to specific folder according to extension
     :param path: file path
     :param file: file name
     :return: Null
     """
     filename, file_extension = splitext(file)
-    if file_extension in all_extension:
+    if file_extension in all_extension :
         if exists(check_path + all_extension[file_extension] + file):
             file = rename_file(filename, file_extension, check_path, check_path + all_extension[file_extension])
+            shutil.move(check_path + file, check_path + all_extension[file_extension])
         else:
             shutil.move(check_path + file, check_path + all_extension[file_extension])
     elif file_extension not in all_extension:
-        if exists(check_path + "/Others/" + file):
+        if exists(check_path + "/Others/" + file) and (platform == "linux" or platform == "macOS"):
+            file = rename_file(filename, file_extension,check_path, check_path+"Others/")
+            shutil.move(check_path + file, check_path + "Others")
+        elif exists(check_path + "/Others/" + file) and platform == "windows":
             file = rename_file(filename, file_extension,check_path, check_path+"Others/")
             shutil.move(check_path + file, check_path + "Others")
         else:
@@ -62,8 +66,5 @@ class Cleaner(FileSystemEventHandler):
 
     def on_modified(self, event):
         for file in listdir(self.check_path):
-            if platform == "linux" or platform == "macOS":
-                if isfile(self.check_path +file):
-                    move_file(self.check_path,file)
-            elif platform == "windows":
-                pass
+            if isfile(self.check_path + file):
+                move_file(self.check_path, file)
